@@ -13,10 +13,14 @@ type Wallet struct {
 }
 
 func (w *Wallet) Deposit(amount Bitcoin) {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 	w.balance += amount
 }
 
 func (w *Wallet) Withdraw(amount Bitcoin) error {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 	if amount > w.balance {
 		return errors.New("not enough balance")
 	}
@@ -25,5 +29,7 @@ func (w *Wallet) Withdraw(amount Bitcoin) error {
 }
 
 func (w *Wallet) Balance() Bitcoin {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 	return w.balance
 }
